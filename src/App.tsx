@@ -1,26 +1,119 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import LoginForm from "./components/LoginForm";
+import WelcomePage from "./components/WelcomePage";
+import {
+  utilityGetEmailLogged,
+  utilityGetUserLogged,
+  utilityGetUsers,
+} from "./utility";
+import MsgBox from "./components/MsgBox";
+import InfoAccess from "./components/InfoAccess";
 
-function App() {
+const App = (): JSX.Element => {
+  const [email, setEmail] = useState(utilityGetEmailLogged());
+  /*const [users, setUsers] = useState(() => {
+    const storedUsers = localStorage.getItem("users");
+    return storedUsers ? JSON.parse(storedUsers) : [];
+  });*/
+  useEffect(() => {
+    //setEmail(email+email.length);
+    //console.log("DidMount");
+    //console.log(utilityGetEmailLogged());
+  }, [email]);
+
+  //const emailLength = useMemo(() => email.length, [email]);
+
+  const saveEmailLogged = (email: any) => {
+    setEmail(email);
+    localStorage.setItem("email", email);
+  };
+  const deleteEmailLogged = () => {
+    //console.log("Email rimossa correttamente");
+    setEmail("");
+    localStorage.removeItem("email");
+  };
+  const onClickLogin = (email: any) => {
+    saveEmailLogged(email);
+    saveUserToStorage();
+  };
+  // useCallback(
+  //   (email: any) => {
+  //     saveEmailLogged(email);
+  //     saveUserToStorage();
+  //   },
+  //   [email]
+  // );
+
+  const onClickLogout = () => {
+    deleteEmailLogged();
+  };
+
+  const saveUserToStorage = () => {
+    const user = utilityGetUserLogged();
+    if (!!user) {
+      updateUser(user);
+    } else {
+      saveNewUser();
+    }
+  };
+
+  const updateUser = (user: any) => {
+    const users = utilityGetUsers();
+    const newUsers = users.map((u: any) =>
+      u.email === user.email
+        ? {
+            ...u,
+            onAccess: new Date().toLocaleString(),
+            lastAccess: u.onAccess,
+            counter: u.counter + 1,
+          }
+        : u
+    );
+    //users = newUsers;
+    //setUsers(newUsers);
+    localStorage.setItem("users", JSON.stringify(newUsers));
+  };
+
+  const saveNewUser = () => {
+    const users = utilityGetUsers();
+    const email = utilityGetEmailLogged();
+    //console.log(email);
+    const newUsers = [
+      ...users,
+      {
+        email: email,
+        onAccess: new Date().toLocaleString(),
+        lastAccess: "",
+        counter: 1,
+      },
+    ];
+    //users = newUsers;
+    //setUsers(newUsers);
+    localStorage.setItem("users", JSON.stringify(newUsers));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {!!email ? (
+        /*<WelcomePage
+          onClickLogout={onClickLogout}
+          //users={users}
+          //setUsers={setUsers}
+          //getEmailLogged={utilityGetEmailLogged}
+          //getUserLogged={utilityGetUserLogged}
+        />*/
+        <>
+          <InfoAccess onClickLogout={onClickLogout} />
+          <MsgBox
+          //emailP={email}
+          />
+        </>
+      ) : (
+        <LoginForm onClickLogin={onClickLogin} />
+      )}
     </div>
   );
-}
+};
 
 export default App;
