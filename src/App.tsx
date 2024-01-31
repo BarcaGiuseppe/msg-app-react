@@ -1,7 +1,6 @@
 import "./App.css";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import LoginForm from "./components/LoginForm";
-import WelcomePage from "./components/WelcomePage";
 import {
   utilityGetEmailLogged,
   utilityGetUserLogged,
@@ -11,7 +10,7 @@ import MsgBox from "./components/MsgBox";
 import InfoAccess from "./components/InfoAccess";
 
 const App = (): JSX.Element => {
-  const [email, setEmail] = useState(utilityGetEmailLogged());
+  const [email, setEmail] = useState<string>(utilityGetEmailLogged());
   /*const [users, setUsers] = useState(() => {
     const storedUsers = localStorage.getItem("users");
     return storedUsers ? JSON.parse(storedUsers) : [];
@@ -24,16 +23,16 @@ const App = (): JSX.Element => {
 
   //const emailLength = useMemo(() => email.length, [email]);
 
-  const saveEmailLogged = (email: any) => {
+  const saveEmailLogged = (email: any): void => {
     setEmail(email);
     localStorage.setItem("email", email);
   };
-  const deleteEmailLogged = () => {
+  const deleteEmailLogged = (): void => {
     //console.log("Email rimossa correttamente");
     setEmail("");
     localStorage.removeItem("email");
   };
-  const onClickLogin = (email: any) => {
+  const onClickLogin = (email: any): void => {
     saveEmailLogged(email);
     saveUserToStorage();
   };
@@ -45,11 +44,11 @@ const App = (): JSX.Element => {
   //   [email]
   // );
 
-  const onClickLogout = () => {
+  const onClickLogout = (): void => {
     deleteEmailLogged();
   };
 
-  const saveUserToStorage = () => {
+  const saveUserToStorage = (): void => {
     const user = utilityGetUserLogged();
     if (!!user) {
       updateUser(user);
@@ -58,7 +57,7 @@ const App = (): JSX.Element => {
     }
   };
 
-  const updateUser = (user: any) => {
+  const updateUser = (user: any): void => {
     const users = utilityGetUsers();
     const newUsers = users.map((u: any) =>
       u.email === user.email
@@ -75,7 +74,7 @@ const App = (): JSX.Element => {
     localStorage.setItem("users", JSON.stringify(newUsers));
   };
 
-  const saveNewUser = () => {
+  const saveNewUser = (): void => {
     const users = utilityGetUsers();
     const email = utilityGetEmailLogged();
     //console.log(email);

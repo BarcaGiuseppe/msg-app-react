@@ -5,15 +5,8 @@ import {
   utilityUpdateMsgLS,
 } from "../utility";
 import styled from "styled-components";
-import ArrMessage from "./IMsgInterface";
-
-const ButtonContainer = styled.div<{ islight?: boolean }>((props) => ({
-  background: props.islight ? "white" : "black",
-  display: "flex",
-  justifyContent: "flex-end",
-  marginTop: "8px",
-  marginRight: "8px",
-}));
+import ArrMessage from "../interfaces/IMsgInterface";
+import UserInfo from "../interfaces/IUserInfo";
 
 const MessageContainer = styled.div<{ ismymsg?: boolean }>((props) => ({
   padding: "8px",
@@ -41,7 +34,7 @@ const Button = styled.button(() => ({
 const MsgBox = (): JSX.Element =>
   //{ emailP }: { emailP: string }
   {
-    const user: string = utilityGetUserLogged();
+    const user: UserInfo | null = utilityGetUserLogged();
     const email: string = utilityGetEmailLogged()!;
 
     //console.log(emailP);

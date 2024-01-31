@@ -1,20 +1,27 @@
 import { FC } from "react";
 import { utilityGetEmailLogged, utilityGetUserLogged } from "../utility";
 import styled from "styled-components";
+import UserInfo from "../interfaces/IUserInfo";
 
-const Button = styled.button<{ $primary?: boolean }>`
-  background: ${(props) => (props.$primary ? "#BF4F74" : "white")};
-  color: ${(props) => (props.$primary ? "white" : "#BF4F74")};
-  font-size: 1em;
-  margin: 1em;
-  padding: 0.25em 1em;
-  border: 2px solid #bf4f74;
-  border-radius: 3px;
-`;
-const InfoAccess = ({ onClickLogout }: { onClickLogout: any }): JSX.Element => {
-  const user = utilityGetUserLogged();
-  const email = utilityGetEmailLogged();
-  //console.log(user.lastAccess);
+const Button = styled.button<{ $primary?: boolean }>((props) => ({
+  background: "#717D7E",
+  color: "white",
+  fontSize: "1em",
+  margin: "1em",
+  padding: "0.25em 1em",
+  border: "2px solid black",
+  borderRadius: "3px",
+}));
+
+interface InfoAccessProps {
+  onClickLogout: () => void;
+}
+
+const InfoAccess: React.FC<InfoAccessProps> = ({
+  onClickLogout,
+}): JSX.Element => {
+  const user: UserInfo | null = utilityGetUserLogged();
+  const email: string | undefined = utilityGetEmailLogged();
   return user && user.counter > 1 ? (
     <>
       <div className="rowI">
